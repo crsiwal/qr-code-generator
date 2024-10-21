@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "QRCode Generator",
+  "name": "QR Code Generator",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,5 +21,16 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "@context": "http://schema.org",
+  "@type": "WebApplication",
+  "url": "https://qrcode-generator.gchat.in",
+  "description": "A free QR code generator tool that allows users to generate custom QR codes for URLs, messages, WiFi, and more.",
+  "operatingSystem": "All",
+  "applicationCategory": "Utility",
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD"
+  }
 }

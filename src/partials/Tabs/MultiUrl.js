@@ -1,4 +1,4 @@
 function TabMultiUrl() {
-  return <>MultiUrl</>;
+  return <>Coming Soon</>;
 }
 export default TabMultiUrl;

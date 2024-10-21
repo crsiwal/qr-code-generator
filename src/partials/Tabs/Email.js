@@ -1,5 +1,4 @@
 function TabEmail({ text, setText }) {
-    return <>Email</>;
-  }
-  export default TabEmail;
-  
+  return <>Coming Soon</>;
+}
+export default TabEmail;

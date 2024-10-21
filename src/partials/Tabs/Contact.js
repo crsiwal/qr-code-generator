@@ -1,4 +1,4 @@
 function TabContact() {
-  return <>Contact</>;
+  return <>Coming Soon</>;
 }
 export default TabContact;

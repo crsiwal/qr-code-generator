@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tab, Nav } from "react-bootstrap";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faAt, faClipboard, faCopy, faKeyboard, faLink, faListOl, faMessage, faMobile, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faAt, faCopy, faKeyboard, faLink, faListOl, faMessage, faMobile, faPhone } from "@fortawesome/free-solid-svg-icons";
 import TabUrl from "./Tabs/Url";
 import TabMultiUrl from "./Tabs/MultiUrl";
 import TabContact from "./Tabs/Contact";
@@ -14,6 +14,7 @@ import TabPhone from "./Tabs/Phone";
 
 function QRCodeGenerator() {
   const [text, setText] = useState("");
+  const [qrError, setQrError] = useState(false);
 
   const downloadQRCode = () => {
     const canvas = document.querySelector("canvas");
@@ -26,20 +27,38 @@ function QRCodeGenerator() {
     document.body.removeChild(downloadLink);
   };
 
+  const copyQRCodeToClipboard = async () => {
+    try {
+      const canvas = document.querySelector("canvas");
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+
+      if (blob) {
+        const clipboardItem = new ClipboardItem({ "image/png": blob });
+        await navigator.clipboard.write([clipboardItem]);
+        alert("QR code copied to clipboard!");
+      } else {
+        alert("Failed to copy QR code.");
+      }
+    } catch (err) {
+      console.error("Failed to copy QR code to clipboard", err);
+      alert("Error copying QR code to clipboard.");
+    }
+  };
+
   return (
-    <div className="container mt-5">
+    <div className="container min-vh-100 mt-5">
       <div className="row text-center">
         <div className="col-12">
-          <h1>QR Code Generator - Create QR Codes for Free</h1>
+          <h1>Free QR Code Generator - Create Your QR Code Online</h1>
         </div>
         <div className="offset-2 col-8">
           <p>Generate QR Codes effortlessly with our intuitive interface. Access a free plan that never expires! Customize your QR Codes, track their performance, and make informed decisions with ease.</p>
         </div>
       </div>
-      <Tab.Container defaultActiveKey="url">
+      <Tab.Container defaultActiveKey="url" onSelect={() => setText("")}>
         <div className="row mt-4">
-          <div className="col-9">
-            <div className="bg-light border py-2 px-5 mb-2">
+          <div className="col-9 bg-light border border-end-0">
+            <div className="py-2 px-5 mb-2 border-bottom">
               <Nav variant="underline" justify={true}>
                 <Nav.Item>
                   <Nav.Link className="text-dark" eventKey="url">
@@ -107,13 +126,13 @@ function QRCodeGenerator() {
                 </Nav.Item>
               </Nav>
             </div>
-            <div className="bg-light border p-5">
+            <div className="p-4">
               <Tab.Content>
                 <Tab.Pane eventKey="url">
-                  <TabUrl text={text} setText={setText} />
+                  <TabUrl text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="multi-url">
-                  <TabMultiUrl text={text} setText={setText} />
+                  <TabMultiUrl text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="contact">
                   <TabContact text={text} setText={setText} />
@@ -136,16 +155,21 @@ function QRCodeGenerator() {
               </Tab.Content>
             </div>
           </div>
-          <div className="col-3 bg-light border">
+          <div className="col-3 bg-light border border-start-0">
             <div className="p-3">
-              <div>
-                <QRCodeSVG className="border w-100 h-100" value={text ? text : "http://qrcode-generator.gchat.in/"} size={1024} marginSize={3} bgColor="#ffffff" fgColor="#000000" />
+              <div className="qr-preview-container" style={{ position: "relative", display: "inline-block" }}>
+                <div
+                  style={{ pointerEvents: "none" }}
+                  onContextMenu={e => e.preventDefault()} // Disable right-click
+                >
+                  <QRCodeCanvas className="border w-100 h-100" value={text && !qrError ? text : "https://qrcode-generator.gchat.in/"} size={1024} marginSize={3} bgColor="#ffffff" fgColor="#000000" />
+                </div>
               </div>
               <div className="d-flex mt-3">
-                <button type="button" class="btn btn-lg btn-success fw-bold me-2 w-100" disabled={!text}>
+                <button type="button" className="btn btn-lg btn-success fw-bold me-2 w-100" onClick={downloadQRCode} disabled={!text || qrError}>
                   Download
                 </button>
-                <button type="button" class="fs-2 btn btn-lg btn-success p-0 px-3" disabled={!text}>
+                <button type="button" className="fs-2 btn btn-lg btn-success p-0 px-3" onClick={copyQRCodeToClipboard} disabled={!text || qrError}>
                   <FontAwesomeIcon icon={faCopy} />
                 </button>
               </div>

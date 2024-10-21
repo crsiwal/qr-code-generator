@@ -1,4 +1,4 @@
 function TabApplication() {
-  return <>Tab Application</>;
+  return <>Coming Soon</>;
 }
 export default TabApplication;
