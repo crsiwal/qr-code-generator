@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tab, Nav } from "react-bootstrap";
 import { QRCodeCanvas } from "qrcode.react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faAt, faCopy, faKeyboard, faLink, faListOl, faMessage, faMobile, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faAt, faCopy, faKeyboard, faLink, faListOl, faMessage, faMobile, faPhone, faWifi } from "@fortawesome/free-solid-svg-icons";
 import TabUrl from "./Tabs/Url";
 import TabMultiUrl from "./Tabs/MultiUrl";
 import TabContact from "./Tabs/Contact";
@@ -11,6 +11,7 @@ import TabApplication from "./Tabs/Application";
 import TabSms from "./Tabs/Sms";
 import TabEmail from "./Tabs/Email";
 import TabPhone from "./Tabs/Phone";
+import TabWifi from "./Tabs/Wifi";
 
 function QRCodeGenerator() {
   const [text, setText] = useState("");
@@ -124,6 +125,14 @@ function QRCodeGenerator() {
                     <div className="text-muted">Phone</div>
                   </Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link className="text-dark" eventKey="wifi">
+                    <div className="fs-5 mb-1">
+                      <FontAwesomeIcon icon={faWifi} />
+                    </div>
+                    <div className="text-muted">Wi-Fi</div>
+                  </Nav.Link>
+                </Nav.Item>
               </Nav>
             </div>
             <div className="p-4">
@@ -135,22 +144,25 @@ function QRCodeGenerator() {
                   <TabMultiUrl text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="contact">
-                  <TabContact text={text} setText={setText} />
+                  <TabContact text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="text">
-                  <TabText text={text} setText={setText} />
+                  <TabText text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="app">
-                  <TabApplication text={text} setText={setText} />
+                  <TabApplication text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="sms">
-                  <TabSms text={text} setText={setText} />
+                  <TabSms text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="email">
-                  <TabEmail text={text} setText={setText} />
+                  <TabEmail text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="phone">
-                  <TabPhone text={text} setText={setText} />
+                  <TabPhone text={text} setText={setText} setQrError={setQrError} />
+                </Tab.Pane>
+                <Tab.Pane eventKey="wifi">
+                  <TabWifi text={text} setText={setText} setQrError={setQrError} />
                 </Tab.Pane>
               </Tab.Content>
             </div>

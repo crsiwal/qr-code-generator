@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { anyText, numericText } from "../../utils/inputTextControl";
 import { handleNoLineBreak } from "../../utils/noLineBreak";
 
-function TabSms({ text, setText }) {
+function TabSms({ text, setText, setQrError }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
 
