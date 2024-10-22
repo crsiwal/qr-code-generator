@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Tab, Nav } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Tab, Nav, Spinner } from "react-bootstrap";
 import { QRCodeCanvas } from "qrcode.react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAddressCard, faAt, faCopy, faKeyboard, faLink, faListOl, faMessage, faMobile, faPhone, faWifi } from "@fortawesome/free-solid-svg-icons";
@@ -11,11 +11,15 @@ import TabApplication from "./Tabs/Application";
 import TabSms from "./Tabs/Sms";
 import TabEmail from "./Tabs/Email";
 import TabPhone from "./Tabs/Phone";
-import TabWifi from "./Tabs/Wifi";
+import TabWifi from "./Tabs/WiFi";
 
-function QRCodeGenerator() {
+function QRCode() {
   const [text, setText] = useState("");
+  const [qrText, setQrText] = useState("");
   const [qrError, setQrError] = useState(false);
+  const [qrContainerClass, setQrContainerClass] = useState("d-none");
+  const timeoutRef = useRef(null);
+  const qrTimeoutRef = useRef(null);
 
   const downloadQRCode = () => {
     const canvas = document.querySelector("canvas");
@@ -45,6 +49,38 @@ function QRCodeGenerator() {
       alert("Error copying QR code to clipboard.");
     }
   };
+
+  useEffect(() => {
+    console.log(`Qr Error`, qrError);
+    if (qrError) {
+      setQrContainerClass("d-none");
+    } else {
+      // Clear the previous timeout if it exists
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (qrText !== "") {
+        timeoutRef.current = setTimeout(() => {
+          setQrContainerClass("d-flex z-3 align-items-center justify-content-center w-100 h-100 bg-light position-absolute");
+          setTimeout(() => {
+            setQrContainerClass("d-none");
+          }, 2000);
+        }, 100);
+      }
+    }
+  }, [qrText, timeoutRef, qrError]);
+
+  useEffect(() => {
+    // Clear the previous timeout if it exists
+    if (qrTimeoutRef.current) {
+      clearTimeout(qrTimeoutRef.current);
+    }
+    if (text !== qrText) {
+      qrTimeoutRef.current = setTimeout(() => {
+        setQrText(text);
+      }, 1000);
+    }
+  }, [text]);
 
   return (
     <div className="container min-vh-100 mt-5">
@@ -168,22 +204,28 @@ function QRCodeGenerator() {
             </div>
           </div>
           <div className="col-3 bg-light border border-start-0">
-            <div className="p-3">
-              <div className="qr-preview-container" style={{ position: "relative", display: "inline-block" }}>
-                <div
-                  style={{ pointerEvents: "none" }}
-                  onContextMenu={e => e.preventDefault()} // Disable right-click
-                >
-                  <QRCodeCanvas className="border w-100 h-100" value={text && !qrError ? text : "https://qrcode-generator.gchat.in/"} size={1024} marginSize={3} bgColor="#ffffff" fgColor="#000000" />
-                </div>
+            <div className="position-relative">
+              <div className={qrContainerClass}>
+                <Spinner animation="border" role="status"></Spinner>
+                <span className="ms-2 fs-4 fw-bold">Creating...</span>
               </div>
-              <div className="d-flex mt-3">
-                <button type="button" className="btn btn-lg btn-success fw-bold me-2 w-100" onClick={downloadQRCode} disabled={!text || qrError}>
-                  Download
-                </button>
-                <button type="button" className="fs-2 btn btn-lg btn-success p-0 px-3" onClick={copyQRCodeToClipboard} disabled={!text || qrError}>
-                  <FontAwesomeIcon icon={faCopy} />
-                </button>
+              <div className="p-3">
+                <div className="qr-preview-container" style={{ position: "relative", display: "inline-block" }}>
+                  <div
+                    style={{ pointerEvents: "none" }}
+                    onContextMenu={e => e.preventDefault()} // Disable right-click
+                  >
+                    <QRCodeCanvas className="border w-100 h-100" value={qrText && !qrError ? qrText : "https://qrcode-generator.gchat.in/"} size={1024} marginSize={1} bgColor="#ffffff" fgColor="#000000" />
+                  </div>
+                </div>
+                <div className="d-flex mt-3">
+                  <button type="button" className="btn btn-lg btn-success fw-bold me-2 w-100" onClick={downloadQRCode} disabled={qrError}>
+                    Download
+                  </button>
+                  <button type="button" className="fs-2 btn btn-lg btn-success p-0 px-3" onClick={copyQRCodeToClipboard} disabled={qrError}>
+                    <FontAwesomeIcon icon={faCopy} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -193,4 +235,4 @@ function QRCodeGenerator() {
   );
 }
 
-export default QRCodeGenerator;
+export default QRCode;

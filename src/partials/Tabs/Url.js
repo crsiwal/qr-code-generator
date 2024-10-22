@@ -10,6 +10,7 @@ function TabUrl({ text, setText, setQrError }) {
       setQrError(true);
     } else {
       const isValidUrl = validateURL(newText);
+      console.log(`Valid Url: `, isValidUrl);
       setValidUrl(isValidUrl);
       setQrError(!validUrl);
     }
