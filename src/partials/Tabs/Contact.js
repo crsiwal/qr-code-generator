@@ -48,6 +48,10 @@ function TabContact({ setText, setQrError }) {
   };
 
   useEffect(() => {
+    setTitle(`${firstName} ${lastName}`);
+  }, [firstName, lastName, setTitle]);
+
+  useEffect(() => {
     const newText = `BEGIN:VCARD
 VERSION:3.0
 N:${lastName};${firstName};;${prefix}
@@ -55,11 +59,11 @@ FN:${firstName} ${lastName}
 PREFIX:${prefix}
 TITLE:${title}
 ORG:${organization}
-TEL;other:${phoneNumber}
-TEL;mobile:${mobileNumber}
+TEL;Other:${phoneNumber}
+TEL;Mobile:${mobileNumber}
 FAX:${fax}
 EMAIL:${email}
-ADR:;;${street};${city};${region};;${country}
+ADR:;;${street};${city};${region};${postcode};${country}
 URL:${website}
 END:VCARD`;
     setText(newText);
