@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { anyText, numericText, phoneText } from "../../utils/inputTextControl";
+import { anyText, emailText, numericText, phoneText } from "../../utils/inputTextControl";
 import { validateEmail, validatePhoneNumber, validateURL } from "../../utils/validates";
 
 function TabContact({ setText, setQrError }) {
@@ -24,7 +24,7 @@ function TabContact({ setText, setQrError }) {
   const [websiteError, setWebsiteError] = useState("");
 
   const handleEmailAddress = e => {
-    const value = anyText(e.target.value, 200);
+    const value = emailText(e.target.value, 256);
     setEmail(value);
     setEmailError(value && value !== "" ? !validateEmail(value) : false);
   };

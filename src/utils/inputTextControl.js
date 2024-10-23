@@ -21,6 +21,10 @@ export const numericText = (value, limit = Infinity) => {
   return textLimit(value.replace(/[^0-9]/g, ""), limit);
 };
 
+export const floatText = (value, limit = Infinity) => {
+  return textLimit(value.replace(/[^0-9.]/g, "").replace(/\.{2,}/g, "."), limit);
+};
+
 export const phoneText = (value, limit = Infinity) => {
   return textLimit(
     value

@@ -19,3 +19,16 @@ export const validateURL = link => {
     return false;
   }
 };
+
+export const validateLatitude = latitude => {
+  return latitude >= -90 && latitude <= 90;
+};
+
+export const validateLongitude = longitude => {
+  return longitude >= -180 && longitude <= 180;
+};
+
+export const validateAltitude = altitude => {
+  // Change this condition if you want to set an upper limit
+  return altitude >= 0;
+};
