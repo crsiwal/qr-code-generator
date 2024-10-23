@@ -1,32 +1,23 @@
 import { useEffect, useState } from "react";
-import { numericText } from "../../utils/inputTextControl";
+import { phoneText } from "../../utils/inputTextControl";
+import { validatePhoneNumber } from "../../utils/validates";
 
-function TabPhone({ text, setText, setQrError }) {
+function TabPhone({ setText, setQrError }) {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [validPhoneNumber, setValidPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
 
-  const handleInputPhoneNumber = newText => {
-    setPhoneNumber(newText);
-    if (newText === "") {
-      setValidPhoneNumber(true);
-      setQrError(true);
-    } else {
-      const isValidPhoneNumber = validatePhoneNumber(newText);
-      setValidPhoneNumber(isValidPhoneNumber);
-      setQrError(!isValidPhoneNumber);
-    }
-  };
-
-  const validatePhoneNumber = number => {
-    const phoneRegex = /^(?:\+?\d{1,3})?[-.\s]?\(?(?:\d{3})?\)?[-.\s]?\d{3}[-.\s]?\d{4}$/; // Example regex
-    return phoneRegex.test(number);
+  const handlePhoneNumber = e => {
+    const phoneNumber = phoneText(e.target.value, 15);
+    setPhoneNumber(phoneNumber);
+    setPhoneNumberError(phoneNumber && phoneNumber !== "" ? !validatePhoneNumber(phoneNumber) : false);
   };
 
   useEffect(() => {
-    if (validPhoneNumber) {
-      const newText = `tel:${phoneNumber}`;
-      setText(newText);
-    }
+    setQrError(phoneNumberError);
+  }, [phoneNumberError, setQrError]);
+
+  useEffect(() => {
+    setText(!phoneNumberError ? `tel:${phoneNumber}` : "");
   }, [phoneNumber, setText]);
 
   return (
@@ -34,7 +25,7 @@ function TabPhone({ text, setText, setQrError }) {
       <div>
         <p>Link a phone number for quick calls</p>
         <div className="form-floating">
-          <input type="text" className="form-control border-0 border-bottom" placeholder="Phone number" value={phoneNumber} onChange={e => handleInputPhoneNumber(numericText(e.target.value, 15))} />
+          <input type="text" className={`form-control border-0 border-bottom ${phoneNumberError ? "is-invalid" : ""}`} placeholder="Phone number" value={phoneNumber} onChange={handlePhoneNumber} />
           <label htmlFor="floatingInput">Phone number</label>
           <div className="invalid-feedback">Please enter a valid Phone number</div>
         </div>

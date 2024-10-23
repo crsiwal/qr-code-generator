@@ -68,19 +68,15 @@ function QRCode() {
     if (qrTimeoutRef.current) {
       clearTimeout(qrTimeoutRef.current);
     }
-    if (text !== qrText) {
-      qrTimeoutRef.current = setTimeout(() => {
-        setQrText(text);
-      }, 1000);
-    }
+    qrTimeoutRef.current = setTimeout(() => {
+      setQrText(text);
+    }, 1000);
   }, [text]);
 
   return (
     <div className="container min-vh-100 mt-5">
       <div className="row text-center">
-        <div className="col-12">
-          <h1>Free QR Code Generator - Create Your QR Code Online</h1>
-        </div>
+        <div className="col-12">{/* <h1>Free QR Code Generator - Create Your QR Code Online</h1> */}</div>
         <div className="offset-2 col-8">
           <p>Generate QR Codes effortlessly with our intuitive interface. Access a free plan that never expires! Customize your QR Codes, track their performance, and make informed decisions with ease.</p>
         </div>
@@ -95,7 +91,7 @@ function QRCode() {
               <TabContents text={text} setText={setText} setQrError={setQrError} />
             </div>
           </div>
-          <div className="col-3 bg-light border border-start-0">
+          <div className="col-3 bg-light border border-start-0 d-none">
             <div className="position-relative">
               <div className={qrContainerClass}>
                 <Spinner animation="border" role="status"></Spinner>

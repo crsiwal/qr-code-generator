@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
-import { anyText, numericText } from "../../utils/inputTextControl";
+import { anyText, phoneText } from "../../utils/inputTextControl";
 import { handleNoLineBreak } from "../../utils/noLineBreak";
+import { validatePhoneNumber } from "../../utils/validates";
 
-function TabSms({ text, setText, setQrError }) {
+function TabSms({ setText, setQrError }) {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState(false);
   const [message, setMessage] = useState("");
 
+  const handlePhoneNumber = e => {
+    const phoneNumber = phoneText(e.target.value, 15);
+    setPhoneNumber(phoneNumber);
+    setPhoneNumberError(phoneNumber && phoneNumber !== "" ? !validatePhoneNumber(phoneNumber) : false);
+  };
+
   useEffect(() => {
-    if (phoneNumber && message) {
-      const newText = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-      setText(newText);
-    }
+    setQrError(phoneNumberError);
+  }, [phoneNumberError, setQrError]);
+
+  useEffect(() => {
+    setText(!phoneNumberError ? `sms:${phoneNumber}?body=${encodeURIComponent(message)}` : "");
   }, [phoneNumber, message, setText]);
 
   return (
@@ -19,8 +28,9 @@ function TabSms({ text, setText, setQrError }) {
         <p>Link phone number to send a text message quicker</p>
 
         <div className="form-floating">
-          <input type="text" className="form-control border-0 border-bottom" placeholder="Phone number" value={phoneNumber} onChange={e => setPhoneNumber(numericText(e.target.value, 10))} />
+          <input type="text" className={`form-control border-0 border-bottom ${phoneNumberError ? "is-invalid" : ""}`} placeholder="Phone number" value={phoneNumber} onChange={handlePhoneNumber} />
           <label htmlFor="floatingInput">Phone number</label>
+          <div className="invalid-feedback">Please enter a valid Phone number</div>
         </div>
 
         <div className="form-floating mt-3">

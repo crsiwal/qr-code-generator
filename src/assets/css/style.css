@@ -1,0 +1,13 @@
+/* Remove blue border on focus */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #9f9f9f !important;
+}
+
+.tab-content {
+  max-height: 350px;
+  overflow-y: auto;
+}
